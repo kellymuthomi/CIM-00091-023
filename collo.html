@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dummy Weather Data</title>
+    <style>
+        body{
+            text-align: center;
+           justify-content: center;
+        }
+        .weather{
+            background-color: white;
+            color: black;
+            padding: 50px;
+            border-radius: 40px;
+            width: 400px;
+            cursor: pointer;
+            transition: bacground-color 0.3s ease;
+            font-size: 16px;
+            border: none;
+        }
+        .weather:hover{
+            background-color: aqua;
+            color: rgb(145, 14, 14);
+        }
+        .change-city-btn{
+            border-radius: 9px;
+            border-color: rgba(176, 237, 9, 0.967);
+            background-color: rgb(4, 4, 105);
+            color: white;
+            font-size: 20px;
+            padding: 12px;
+            cursor: pointer;
+            transition: bacground-color 0.3s ease;
+        }
+        .change-city-btn:hover{
+            background-color: peru;
+        }
+    </style>
+</head>
+<body><hr/>
+    <h2>Dummy Weather Data </h2>
+
+    <br><button class="weather">🌤️Curently
+       <div>21° in Tokyo</div>
+    </button></br>
+
+    <br><button class="weather">🌨️Tommorrow
+        <div>10° / 22°</div>
+    </button></br>
+
+    <br> <button class="weather">🌤️Saturday
+        <div>15° / 17</div>
+    </button></br>
+
+    <br><button class="weather">🌞Sunday
+        <div>25° / 28°</div>
+    </button></br>
+
+    <br> <button class="change-city-btn">CHANGE CITY</button>
+    <hr/>
+
+    <div class="footer"> Coded by Collins Kipngetich</div>
+</body>
+</html>
