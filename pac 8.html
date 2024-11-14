@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport"content="width=device-width,initial-scale=1.0">
+        <title>Weather App</title>
+        <style>
+            body{
+                font-family: Arial, Helvetica, sans-serif;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    height: 100vh;
+                    margin: 0;
+                    background-color: #f7f7f7;
+            }
+            .container{
+                    width: 470px;
+                    padding: 20px;
+                    border-radius: 8px;
+                    background: #fff;
+                    box-shadow: 0px 4px 12px rgba(0,0,0,1);
+                    text-align: center;
+                }
+                .search-box{
+                    display: flex;
+                    margin-bottom: 20px;
+                }
+                search-box button{
+                    flex: 1;
+                    padding: 10px;
+                    font-size: 16px;
+                    border: 1px solid #ddd;
+                    border-radius: 5px 0 0 5px;
+                    outline: none;
+                }
+                .search-box button{
+                    padding: 10px 20px;
+                    font-size: 16px;
+                    border: none;
+                    background-color: #9b5de5;
+                    color: #fff;
+                    border-radius: 0.5px 5px 0;
+                    cursor: pointer;                  
+                }
+                .weather-info{
+                    font-size: 20px;
+                    margin: 24px 0;
+                    text-align: left;
+
+                }
+                .weather-info.temp{
+                    font-size: 48px;
+                    color: #333;
+                    text-align: left;
+                }
+                .details{
+                    font-size: 14px;
+                    color: #666;
+                }
+                .details span{
+                    color: #e63946;
+                }
+                .footer{
+                    font-size: 12px;
+                    color: #666;
+                    margin-top: 20px;
+                }
+        </style>
+        <div class="container">
+            <div class="search-box">
+                <input type="text"placeholder="Enter a city.."id="city-input">
+                <button class="getWeather()">Search</button>
+            </div>
+            <div class="weather-info">
+                <div class="city"><b> paris </b></div> 
+                <br/>  
+                <div class="details">
+                    Tuesday 07:45,moderate rain
+                    <br/>
+                    Humidity:<span>87%</span>,wind:<span>7.2km/h</span>
+                    <h2 align="center"><div>🌟24°C</div></h2>
+                </div>
+                
+                <div class="footer">
+                    This project was coded by<a href="#">kelly muthomi</a>and is
+                     <a href="#">on GitHub</a>and <a href="#">hosted on Netlify</a>
+                </div>
+            </div>
+        </div>
+    </head>   
+</html>     
