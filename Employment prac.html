@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Management System</title>
+</head>
+<style>
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+}
+
+header {
+    background-color: #4CAF50;
+    color: white;
+    text-align: center;
+    padding: 1rem;
+}
+
+nav {
+    background-color: #333;
+    display: flex;
+    justify-content: center;
+    padding: 0.5rem 0;
+}
+
+nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    gap: 1.5rem;
+}
+
+nav ul li {
+    margin: 0;
+}
+
+nav ul li a {
+    color: white;
+    text-decoration: none;
+    font-size: 1.2rem;
+}
+
+nav ul li a:hover {
+    text-decoration: underline;
+}
+
+main {
+    padding: 2rem;
+}
+
+section {
+    background: white;
+    margin-bottom: 2rem;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+h2 {
+    color: #333;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+form label {
+    font-size: 1rem;
+}
+
+form input {
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 0.7rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+footer {
+    text-align: center;
+    padding: 1rem;
+    background-color: #333;
+    color: white;
+}
+</style>
+<body>
+    <header>
+        <h1>Employee Management System</h1>
+    </header>
+    <nav>
+        <ul>
+            <li><a href="#registration">Registration</a></li>
+            <li><a href="#login">Login</a></li>
+            <li><a href="#finance">Finance</a></li>
+            <li><a href="#departments">Departments</a></li>
+            <li><a href="#procurement">Procurement</a></li>
+            <li><a href="#leave">Leave</a></li>
+        </ul>
+    </nav>
+    <main>
+        <section id="registration">
+            <h2>Registration</h2>
+            <form>
+                <label for="name">Full Name:</label>
+                <input type="text" id="name" name="name" placeholder="name">
+                
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" placeholder="email">
+                
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" placeholder="password">
+                
+                <button type="submit">Register</button>
+            </form>
+        </section>
+        <section id="login">
+            <h2>Login</h2>
+            <form>
+                <label for="login-email">Email:</label>
+                <input type="email" id="login-email" name="login-email" placeholder="login-email">
+                
+                <label for="login-password">Password:</label>
+                <input type="password" id="login-password" name="login-password" placeholder="login-password">
+                
+                <button type="submit">Login</button>
+            </form>
+        </section>
+        <section id="finance">
+            <h2>Finance</h2>
+            <p>Manage employee salaries, bonuses, and other financial details here.</p>
+        </section>
+        <section id="departments">
+            <h2>Departments</h2>
+            <p>View and manage company departments and their members.</p>
+        </section>
+        <section id="procurement">
+            <h2>Procurement</h2>
+            <p>Track and manage procurement activities for the organization.</p>
+        </section>
+        <section id="leave">
+            <h2>Leave</h2>
+            <p>Apply for and manage employee leave requests.</p>
+        </section>
+    </main>
+    <footer>
+        <P>coded by <b> kelly muthomi</b></P>
+        <p>&copy; 2024 Employee Management System.</p>
+    </footer>
+</body>
+</html>
