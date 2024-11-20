@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Join Email List</title>
+
+<style>
+    body{
+        font-family: Arial,sans-serif;
+        background-color: #f4f4f4;
+        margin: 50;
+        padding: 10;
+    }
+    h1{
+        color: rgb(209, 11, 87);
+        text-align: center;
+}
+.container{
+    width:60%;
+    margin: 60px auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgb(0,0,0,0.1);
+}
+h1{
+    text-align: center;
+    color: blueviolet;
+}
+input{
+    padding: 1px;
+    margin-bottom: 10px;
+    border: 2px solid #ccc ;
+    border-radius: 4px;
+    font-size: 10px;
+}
+button{
+    padding: 1px;
+    background-color: none;
+    color: none;
+    border: none;
+    border-radius: 1px;
+    cursor: pointer;
+    font-size: 16px;
+}
+button:hover{
+    background-color: #ccc;
+}
+span{
+    color:red;
+}
+input:focus{
+    outline:none;
+    border-color: none;
+}
+</style>
+</head>
+<body>
+    <div class="container">
+  <h1>Please join our email list</h1>
+    <label for="login-email">Email Address:</label>
+    <input type="email" id="grace@Yahoo.com" name="grace@Yahoo.com" placeholder="grace@Yahoo.com">
+    <br/>
+    <label for="login-email">Re-enter Email Address:</label>
+    <input type="">
+    <label for="login-email"></label><span>This entry must equal first entry</span>
+    <br/>
+    <label for="login-email">First Name:</label>
+    <input type="">
+    <label for="login-email"></label><span>This field is required</span>
+    <br/>
+    <button type="submit" class="form-button">Join our List</button>
+</div>
+</body>
+</html>
