@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Hospital Management System</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f4f4;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      max-width: 600px;
+      margin: 40px auto;
+      background: #f82b2b;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 5px 20px hsla(249, 94%, 50%, 0.906);
+    }
+    h1 ,h2 {
+      color: hwb(140 5% 3%);
+      margin-top: 20px;
+    }
+
+    #search-illness {
+  padding: 8px;
+  width: 100%;
+  margin-bottom: 15px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+}
+
+.doctor-present {
+  color: green;
+  font-weight: bold;
+}
+
+.doctor-absent {
+  color: red;
+  font-weight: bold;
+}
+
+   /* Hide nav links on mobile by default */
+@media (max-width: 768px) {
+  .nav-links {
+    display: none;
+    flex-direction: column;
+    background-color: #2e7d32;
+    position: absolute;
+    top: 60px;
+    right: 0;
+    width: 100%;
+    padding: 10px;
+  }
+
+  .nav-links.active {
+    display: flex;
+  }
+
+  .hamburger {
+    display: block;
+  }
+}
+
+
+/* Info Section Styling */
+.info-section {
+  max-width: 800px;
+  margin: 20px auto;
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.info-section h2 {
+  margin-top: 0;
+  color: #2e7d32;
+}
+
+.info-section ul {
+  padding-left: 20px;
+}
+
+.hidden {
+  display: none;
+}
+
+  
+    input, select, textarea {
+      display: block;
+      width: 100%;
+      padding: 8px;
+      margin: 10px 0;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+    }
+    button {
+      padding: 10px 20px;
+      background: #2e7d32;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+    button:hover {
+      background: #388e3c;
+    }
+    .hidden { display: none; }
+    .error { color: red; }
+    .success { color: #89ee89; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+    th, td {
+      padding: 10px;
+      border: 1px solid #7bf805d5;
+    }
+    .alert {
+      color: hsl(91, 94%, 51%);
+      margin-top: 10px;
+    }
+    .reminder {
+      color: hsl(202, 88%, 54%);
+      font-weight: bold;
+    }
+    #doctor-section input[type="text"],
+#doctor-section input[type="checkbox"] {
+  margin-bottom: 10px;
+}
+
+#doctor-section button {
+  margin-top: 10px;
+}
+
+  </style>
+</head>
+<body>
+  <div class="container" id="auth-container">
+    <h1>WELCOME TO OUR GK'S CLINIC🙏🙏</h1>
+    
+    <!-- Top Navigation Bar -->
+<header class="navbar">
+  <div class="logo">
+    <img src="https://i.ibb.co/QPGZhrk/medical-logo.png" alt=Logo">
+    <span></span>
+  </div>
+
+  <!-- Hamburger icon -->
+  <div class="hamburger" onclick="toggleMenu()">GK'S clinic</div>
+
+<!-- Nav menu -->
+  <nav class="nav-links" id="nav-menu">
+    <a href="#" onclick="goHome()">Home</a>
+    <a href="#" onclick="showSection('about-section')">About</a>
+    <a href="#" onclick="showSection('services-section')">Services</a>
+  </nav>
+</header>
+
+<!-- Info Sections -->
+<section id="about-section" class="info-section hidden">
+  <h2>About Us</h2>
+  <p>GK's Clinic (Atlist Medica) is a modern healthcare facility providing affordable and compassionate care. 
+     We believe in the principle: <strong>"We treat, God heals."</strong> you can contact us on <strong>0756651581</strong> </br> or<strong> 0718219840</strong> </br>thank you so much</p>
+</section>
+
+<section id="services-section" class="info-section hidden">
+  <h2>Our Services</h2>
+  <ul>
+    <li>👨‍⚕️ General Consultation</li>
+    <li>💊 In-House Pharmacy</li>
+    <li>📋 Patient Registration and Records</li>
+    <li>⏰ Appointment and Medicine Reminders</li>
+    <li>📞 Emergency Support</li>
+  </ul>
+</section>
+
+
+    <!-- Login Form -->
+    <div id="login-form">
+      <h3>Login</h3>
+      <input type="text" id="login-username" placeholder="Username">
+      <input type="password" id="login-password" placeholder="Password">
+      <button onclick="login()">Login</button>
+      <p>Don't have an account? <a href="#" onclick="toggleAuth()">Register</a></p>
+      <p id="login-error" class="error"></p>
+    </div>
+    
+
+    <!-- Register Form -->
+    <div id="register-form" class="hidden">
+      <h2>Register</h2>
+      <input type="text" id="reg-username" placeholder="Username">
+      <input type="password" id="reg-password" placeholder="Password">
+      <input type="email" id="reg-email" placeholder="Email (for reminders)">
+      <input type="text" id="reg-phone" placeholder="Phone (optional)">
+      <button onclick="register()">Register</button>
+      <p>Already have an account? <a href="#" onclick="toggleAuth()">Login</a></p>
+      <p id="register-error" class="error"></p>
+
+      <!-- Doctor Availability Section -->
+<div class="container" id="doctor-section">
+  <h2>👨‍⚕️ Doctor Availability</h2>
+  <input type="text" id="search-illness" placeholder="Search by illness (e.g. Fever, Diabetes...)" oninput="filterDoctors()">
+  <table>
+    <thead>
+      <tr>
+        <th>Doctor Name</th>
+        <th>Specialty</th>
+        <th>Availability</th>
+        <th>Days Available</th>
+      </tr>
+    </thead>
+    <tbody id="doctor-table"></tbody>
+  </table>
+</div>
+
+
+      <!-- Footer -->
+<footer>
+  <p>&copy; 2025 GK'S Clinic. All rights reserved.</p>
+  <p>Contact: <a href="mailto:muthomikelly009@gmail.com" style="color:white;">muthomikelly009@gmail.com</a></p>
+  <div class="social-icons">
+    <a href="#" title="Facebook">🌐</a>
+    <a href="#" title="Instagram">📸</a>
+    <a href="#" title="WhatsApp">💬</a>
+    <a href="#" title="TikTok">⛱️</a>
+  </div>
+</footer>
+
+    </div>
+  </div>
+
+  <!-- Dashboard -->
+  <div class="container hidden" id="dashboard">
+    <h2>!!We treat God heals Welcome!!</h2>
+    <button onclick="logout()">Logout</button>
+
+    <!-- Patient Registration -->
+    <div id="patient-section">
+      <h2>Register Patient</h2>
+      <input type="text" id="patient-name" placeholder="Full Name">
+      <input type="number" id="patient-age" placeholder="Age">
+      <select id="patient-gender">
+        <option value="">Select Gender</option>
+        <option value="M">Male</option>
+        <option value="F">Female</option>
+        <option value="O">Other</option>
+      </select>
+
+      <textarea id="patient-illness" placeholder="Describe Illness"></textarea>
+      <input type="date" id="patient-date">
+      <input type="time" id="patient-time">
+      <button onclick="registerPatient()">Register Patient</button>
+      <p id="patient-message" class="success"></p>
+      <p id="reminder-message" class="reminder"></p>
+    </div>
+
+    <!-- Store Inventory -->
+    <div id="store-section">
+      <h2>Store Inventory</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Medicine</th>
+            <th>Expiry Date</th>
+            <th>Quantity</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody id="medicine-table"></tbody>
+      </table>
+
+      <div id="store-alerts" class="alert"></div>
+
+      <h3>Add / Update Medicine</h3>
+      <input type="text" id="med-name" placeholder="Medicine Name">
+      <input type="date" id="med-expiry">
+      <input type="number" id="med-quantity" placeholder="Quantity">
+      <button onclick="addMedicine()">Add / Update</button>
+      <p id="med-message" class="success"></p>
+
+      <h3>Add / Edit Doctor</h3>
+<input type="text" id="doc-name" placeholder="Doctor Name">
+<input type="text" id="doc-specialty" placeholder="Specialty">
+<input type="text" id="doc-illness" placeholder="Illness Treated">
+<label>Days Available:</label>
+<div style="display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 10px;">
+  <label><input type="checkbox" value="Monday" class="doc-day"> Mon</label>
+  <label><input type="checkbox" value="Tuesday" class="doc-day"> Tue</label>
+  <label><input type="checkbox" value="Wednesday" class="doc-day"> Wed</label>
+  <label><input type="checkbox" value="Thursday" class="doc-day"> Thu</label>
+  <label><input type="checkbox" value="Friday" class="doc-day"> Fri</label>
+  <label><input type="checkbox" value="Saturday" class="doc-day"> Sat</label>
+  <label><input type="checkbox" value="Sunday" class="doc-day"> Sun</label>
+</div>
+<button onclick="submitDoctor()">Add Doctor</button>
+<p id="doc-message" class="success"></p>
+
+    </div>
+  </div>
+
+  <script>
+    const users = [{ username: "kelly", password: "admin123", email: "", phone: "" }];
+    let medicines = [];
+
+    function goHome() {
+  window.scrollTo({ top: 0, behavior: "smooth" });
+  hideSections();
+}
+
+function toggleMenu() {
+  const menu = document.getElementById("nav-menu");
+  menu.classList.toggle("active");
+}
+
+
+function showSection(id) {
+  hideSections();
+  document.getElementById(id).classList.remove('hidden');
+  document.getElementById(id).scrollIntoView({ behavior: "smooth" });
+}
+
+function hideSections() {
+  document.getElementById("about-section").classList.add('hidden');
+  document.getElementById("services-section").classList.add('hidden');
+}
+
+
+    function toggleAuth() {
+      document.getElementById('login-form').classList.toggle('hidden');
+      document.getElementById('register-form').classList.toggle('hidden');
+      clearMessages();
+      
+    }
+
+    function login() {
+      const uname = document.getElementById("login-username").value;
+      const pass = document.getElementById("login-password").value;
+      const user = users.find(u => u.username === uname && u.password === pass);
+      document.getElementById("login-form").addEventListener("keydown", function(event) {
+    if (event.key === "Enter") {
+      event.preventDefault(); // Prevent form submission
+      login(); // Call your login function
+    }
+  });
+
+      if (user) {
+        showDashboard();
+      } else {
+        document.getElementById("login-error").innerText = "Invalid username or password.";
+      }
+    }
+
+    function register() {
+      const uname = document.getElementById("reg-username").value;
+      const pass = document.getElementById("reg-password").value;
+      const email = document.getElementById("reg-email").value;
+      const phone = document.getElementById("reg-phone").value;
+
+      if (!uname || !pass || !email) {
+        document.getElementById("register-error").innerText = "All fields except phone are required.";
+        return;
+      }
+
+      if (users.find(u => u.username === uname)) {
+        document.getElementById("register-error").innerText = "Username already exists.";
+        return;
+        document.getElementById("login-form").addEventListener("keydown", function(event) {
+    if (event.key === "Enter") {
+      event.preventDefault(); // Prevent form submission
+      login(); // Call your login function
+    }
+  });
+      }
+
+      users.push({ username: uname, password: pass, email, phone });
+      alert("Registration successful. Please login.");
+      toggleAuth();
+       document.getElementById("register-form").addEventListener("keydown", function(event) {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      register();
+    }
+  });
+    }
+    // Sample doctor data
+const doctors = [
+  {
+    name: "Dr. Meera Sharma",
+    specialty: "Pediatrics",
+    illness: "Fever",
+    available: true,
+    days: ["Monday", "Wednesday", "Friday"]
+  },
+  {
+    name: "Dr. Arjun Patel",
+    specialty: "Cardiology",
+    illness: "Heart Disease",
+    available: false,
+    days: ["Tuesday", "Thursday"]
+  },
+  {
+    name: "Dr. Sana Ali",
+    specialty: "Dermatology",
+    illness: "Skin Issues",
+    available: true,
+    days: ["Monday", "Thursday"]
+  },
+  {
+    name: "Dr. Ravi Kumar",
+    specialty: "Diabetology",
+    illness: "Diabetes",
+    available: false,
+    days: ["Wednesday", "Saturday"]
+  }
+];
+
+// Load doctor data into table
+function loadDoctors() {
+  const table = document.getElementById("doctor-table");
+  table.innerHTML = "";
+
+  doctors.forEach(doctor => {
+    const tr = document.createElement("tr");
+
+    tr.innerHTML = `
+      <td>${doctor.name}</td>
+      <td>${doctor.specialty}</td>
+      <td class="${doctor.available ? 'doctor-present' : 'doctor-absent'}">
+        ${doctor.available ? "Present Today" : "Absent Today"}
+      </td>
+      <td>${doctor.days.join(", ")}</td>
+    `;
+
+    table.appendChild(tr);
+  });
+}
+
+// Filter doctors by illness
+function filterDoctors() {
+  const query = document.getElementById("search-illness").value.toLowerCase();
+  const table = document.getElementById("doctor-table");
+  table.innerHTML = "";
+
+  const weekday = new Date().toLocaleDateString("en-US", { weekday: "long" });
+
+  const filtered = doctors.filter(d =>
+    d.illness.toLowerCase().includes(query) || 
+    d.specialty.toLowerCase().includes(query)
+  );
+
+  if (filtered.length === 0) {
+    table.innerHTML = `<tr><td colspan="4" style="text-align:center;">No doctors found.</td></tr>`;
+    return;
+  }
+
+  filtered.forEach(doctor => {
+    const isPresent = doctor.days.includes(weekday);
+    const tr = document.createElement("tr");
+
+    tr.innerHTML = `
+      <td>${doctor.name}</td>
+      <td>${doctor.specialty}</td>
+      <td class="${doctor.available ? 'doctor-present' : 'doctor-absent'}">
+        ${doctor.available ? "Present Today" : "Absent Today"}
+      </td>
+      <td>${doctor.days.join(", ")}</td>
+    `;
+
+    table.appendChild(tr);
+  });
+}
+
+function showDashboard() {
+  document.getElementById("auth-container").classList.add("hidden");
+  document.getElementById("dashboard").classList.remove("hidden");
+  loadMedicineTable();
+  loadDoctors(); // 🆕 Load doctor list
+}
+
+
+
+    function showDashboard() {
+      document.getElementById("auth-container").classList.add("hidden");
+      document.getElementById("dashboard").classList.remove("hidden");
+      loadMedicineTable();
+    }
+
+    function logout() {
+      document.getElementById("dashboard").classList.add("hidden");
+      document.getElementById("auth-container").classList.remove("hidden");
+    }
+
+    function clearMessages() {
+      document.getElementById("login-error").innerText = "";
+      document.getElementById("register-error").innerText = "";
+      document.getElementById("patient-message").innerText = "";
+      document.getElementById("reminder-message").innerText = "";
+      document.getElementById("med-message").innerText = "";
+    }
+
+    function registerPatient() {
+      const name = document.getElementById("patient-name").value;
+      const age = document.getElementById("patient-age").value;
+      const gender = document.getElementById("patient-gender").value;
+      const illness = document.getElementById("patient-illness").value;
+      const date = document.getElementById("patient-date").value;
+      const time = document.getElementById("patient-time").value;
+
+      if (!name || !age || !gender || !date || !time) {
+        document.getElementById("patient-message").innerText = "Please fill in all required fields.";
+        return;
+      }
+
+      document.getElementById("patient-message").innerText = `Patient ${name} registered successfully.`;
+
+      // Simulate reminder after 5s
+      setTimeout(() => {
+        document.getElementById("reminder-message").innerText =
+          `🔔 Hello sir/mrs Reminder: ${name},  take your medicine on ${date} at ${time} thenks.`;
+      }, 5000);
+    }
+
+    function addMedicine() {
+      const name = document.getElementById("med-name").value;
+      const expiry = document.getElementById("med-expiry").value;
+      const quantity = parseInt(document.getElementById("med-quantity").value);
+
+      if (!name || !expiry || isNaN(quantity)) {
+        document.getElementById("med-message").innerText
+                document.getElementById("med-message").innerText = "Please fill in all medicine fields.";
+        return;
+      }
+
+      // Check if medicine already exists
+      const existing = medicines.find(m => m.name.toLowerCase() === name.toLowerCase());
+      if (existing) {
+        existing.expiry = expiry;
+        existing.quantity = quantity;
+      } else {
+        medicines.push({ name, expiry, quantity });
+      }
+
+      document.getElementById("med-message").innerText = `Medicine "${name}" updated successfully.`;
+
+      // Clear fields
+      document.getElementById("med-name").value = "";
+      document.getElementById("med-expiry").value = "";
+      document.getElementById("med-quantity").value = "";
+
+      // Refresh table and alerts
+      loadMedicineTable();
+    }
+
+    function loadMedicineTable() {
+      const tbody = document.getElementById("medicine-table");
+      const alertsDiv = document.getElementById("store-alerts");
+      tbody.innerHTML = "";
+      alertsDiv.innerHTML = "";
+
+      const today = new Date();
+
+      medicines.forEach(med => {
+        const expDate = new Date(med.expiry);
+        const timeDiff = expDate - today;
+        const daysLeft = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
+
+        let status = "✅ OK";
+        let alertMessages = [];
+
+        if (daysLeft <= 30) {
+          status = "⚠️ Expiring Soon";
+          alertMessages.push(`⚠️ "${med.name}" expires in ${daysLeft} day(s).`);
+        }
+
+        if (med.quantity < 10) {
+          status += (status !== "✅ OK" ? " | " : "") + "🛒 Low Stock";
+          alertMessages.push(`🛒 "${med.name}" is low in stock (${med.quantity}).`);
+        }
+
+        tbody.innerHTML += `
+          <tr>
+            <td>${med.name}</td>
+            <td>${med.expiry}</td>
+            <td>${med.quantity}</td>
+            <td>${status}</td>
+          </tr>
+        `;
+
+        alertMessages.forEach(msg => {
+          const div = document.createElement("div");
+          div.className = "alert";
+          div.innerText = msg;
+          alertsDiv.appendChild(div);
+        });
+      });
+
+      if (medicines.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="4" style="text-align:center;">No medicines added yet.</td></tr>`;
+      }
+    }
+
+    let editingDoctorIndex = null;
+
+function submitDoctor() {
+  const name = document.getElementById("doc-name").value.trim();
+  const specialty = document.getElementById("doc-specialty").value.trim();
+  const illness = document.getElementById("doc-illness").value.trim();
+  const dayCheckboxes = document.querySelectorAll(".doc-day:checked");
+  const days = Array.from(dayCheckboxes).map(cb => cb.value);
+
+  const messageEl = document.getElementById("doc-message");
+
+  if (!name || !specialty || !illness || days.length === 0) {
+    messageEl.innerText = "Please fill in all fields and select at least one day.";
+    return;
+  }
+
+  const doctorData = { name, specialty, illness, days };
+
+  if (editingDoctorIndex !== null) {
+    // Update existing doctor
+    doctors[editingDoctorIndex] = doctorData;
+    messageEl.innerText = `Doctor "${name}" updated successfully.`;
+    editingDoctorIndex = null;
+  } else {
+    // Add new doctor
+    doctors.push(doctorData);
+    messageEl.innerText = `Doctor "${name}" added successfully.`;
+  }
+
+  clearDoctorForm();
+  loadDoctors();
+}
+
+// Fills form with doctor info for editing
+function editDoctor(index) {
+  const doc = doctors[index];
+  document.getElementById("doc-name").value = doc.name;
+  document.getElementById("doc-specialty").value = doc.specialty;
+  document.getElementById("doc-illness").value = doc.illness;
+
+  document.querySelectorAll(".doc-day").forEach(cb => {
+    cb.checked = doc.days.includes(cb.value);
+  });
+
+  editingDoctorIndex = index;
+  document.getElementById("doc-message").innerText = `Editing "${doc.name}". Make changes and click Update.`;
+}
+
+// Clears the form
+function clearDoctorForm() {
+  document.getElementById("doc-name").value = "";
+  document.getElementById("doc-specialty").value = "";
+  document.getElementById("doc-illness").value = "";
+  document.querySelectorAll(".doc-day").forEach(cb => cb.checked = false);
+}
+function loadDoctors() {
+  const table = document.getElementById("doctor-table");
+  table.innerHTML = "";
+
+  const today = new Date();
+  const weekday = today.toLocaleDateString("en-US", { weekday: "long" });
+
+  doctors.forEach((doctor, index) => {
+    const isPresent = doctor.days.includes(weekday);
+
+    const tr = document.createElement("tr");
+
+    tr.innerHTML = `
+      <td>${doctor.name}</td>
+      <td>${doctor.specialty}</td>
+      <td class="${isPresent ? 'doctor-present' : 'doctor-absent'}">
+        ${isPresent ? "Present Today" : "Absent Today"}
+      </td>
+      <td>${doctor.days.join(", ")} <br>
+        <button onclick="editDoctor(${index})">Edit</button>
+      </td>
+    `;
+
+    table.appendChild(tr);
+  });
+}
+
+  </script>
+</body>
+</html>
+
