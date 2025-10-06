@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>School & Clinic Management System</title>
+  <style>
+    :root {
+      --primary: #2563eb;
+      --secondary: #f3f4f6;
+      --dark: #1f2937;
+      --light: #ffffff;
+    }
+
+    * { box-sizing: border-box; margin:0; padding:0; font-family: 'Segoe UI', sans-serif; }
+    body { background: var(--secondary); color: var(--dark); }
+
+    header {
+      background: var(--primary);
+      color: var(--light);
+      padding: 20px;
+      text-align: center;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    }
+    header h1 { font-size: 1.8rem; }
+    header p { font-size: 0.9rem; opacity: 0.9; }
+
+    /* Hamburger */
+    .menu-btn {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      font-size: 26px;
+      cursor: pointer;
+      color: white;
+      display: none;
+    }
+    nav {
+      background: var(--light);
+      padding: 12px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
+      border-bottom: 1px solid #ddd;
+    }
+    nav a {
+      color: var(--dark);
+      text-decoration: none;
+      font-weight: 500;
+      transition: 0.3s;
+      cursor: pointer;
+    }
+    nav a:hover { color: var(--primary); }
+
+    @media(max-width:768px){
+      nav { 
+        flex-direction: column;
+        display: none;
+        text-align: left;
+        padding: 15px;
+      }
+      nav.show { display: flex; }
+      .menu-btn { display: block; }
+    }
+
+    section {
+      display: none;
+      padding: 30px;
+      max-width: 900px;
+      margin: auto;
+    }
+    section.active { display: block; }
+
+    .card {
+      background: var(--light);
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+      margin-bottom: 20px;
+    }
+
+    input, textarea, button, select {
+      padding: 10px;
+      margin: 8px 0;
+      width: 100%;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      font-size: 0.95rem;
+    }
+    button {
+      background: var(--primary);
+      color: var(--light);
+      border: none;
+      cursor: pointer;
+      transition: background 0.3s;
+      font-weight: bold;
+    }
+    button:hover { background: #1d4ed8; }
+
+    footer {
+      background: var(--dark);
+      color: var(--light);
+      text-align: center;
+      padding: 15px;
+      margin-top: 30px;
+    }
+
+    #dashboard { display: none; }
+  </style>
+</head>
+<body>
+  <header>
+    <span class="menu-btn" onclick="toggleMenu()">☰</span>
+    <h1>🏫 School & 🏥 Clinic Management System</h1>
+    <p>Smart integrated portal for academics, health & services</p>
+  </header>
+
+  <!-- LOGIN -->
+  <section id="login" class="active">
+    <div class="card" style="max-width:400px; margin:auto;">
+      <h2>🔐 Login</h2>
+      <input type="text" id="username" placeholder="Username"/>
+      <input type="password" id="password" placeholder="Password"/>
+      <button onclick="login()">Login</button>
+      <p id="loginMsg"></p>
+    </div>
+  </section>
+
+  <!-- DASHBOARD -->
+  <div id="dashboard">
+    <nav id="navMenu">
+      <a onclick="showSection('students')">Students</a>
+      <a onclick="showSection('teachers')">Teachers</a>
+      <a onclick="showSection('doctors')">Doctors</a>
+      <a onclick="showSection('medicines')">Clinic Medicines</a>
+      <a onclick="showSection('portal')">School Portal</a>
+      <a onclick="showSection('library')">Library</a>
+      <a onclick="showSection('sports')">Sports</a>
+      <a onclick="showSection('transport')">Transport</a>
+      <a onclick="showSection('hostel')">Hostel</a>
+      <a onclick="showSection('cafeteria')">Cafeteria</a>
+      <a onclick="showSection('counseling')">Counseling</a>
+      <a onclick="logout()">🚪 Logout</a>
+    </nav>
+
+    <!-- Example extra service: Library -->
+    <section id="library">
+      <div class="card">
+        <h2>📚 Library Services</h2>
+        <input type="text" id="bookTitle" placeholder="Book Title"/>
+        <input type="text" id="bookAuthor" placeholder="Author"/>
+        <button onclick="addBook()">Add Book</button>
+        <ul id="bookList"></ul>
+      </div>
+    </section>
+
+    <!-- Example: Sports -->
+    <section id="sports">
+      <div class="card">
+        <h2>⚽ Sports Department</h2>
+        <textarea id="sportEvent" placeholder="Add sports activity..."></textarea>
+        <button onclick="addSport()">Post Event</button>
+        <ul id="sportList"></ul>
+      </div>
+    </section>
+
+    <!-- Example: Hostel -->
+    <section id="hostel">
+      <div class="card">
+        <h2>🏠 Hostel Management</h2>
+        <input type="text" id="hostelName" placeholder="Hostel Name"/>
+        <input type="number" id="roomNo" placeholder="Room No"/>
+        <button onclick="addHostel()">Assign Room</button>
+        <ul id="hostelList"></ul>
+      </div>
+    </section>
+
+    <!-- Example: Cafeteria -->
+    <section id="cafeteria">
+      <div class="card">
+        <h2>🍴 Cafeteria Menu</h2>
+        <input type="text" id="menuItem" placeholder="Food Item"/>
+        <button onclick="addMenu()">Add to Menu</button>
+        <ul id="menuList"></ul>
+      </div>
+    </section>
+
+    <!-- Example: Counseling -->
+    <section id="counseling">
+      <div class="card">
+        <h2>🧑‍💼 Counseling Services</h2>
+        <textarea id="counselText" placeholder="Counseling notes..."></textarea>
+        <button onclick="addCounsel()">Save</button>
+        <ul id="counselList"></ul>
+      </div>
+    </section>
+
+    <!-- Existing School Portal (Assignments, Grades, Activities, etc.) -->
+    <section id="portal">
+      <div class="card">
+        <h2>📘 Assignments</h2>
+        <textarea id="assignmentText" placeholder="Enter assignment details..."></textarea>
+        <button onclick="postAssignment()">Post Assignment</button>
+        <ul id="assignmentList"></ul>
+      </div>
+      <div class="card">
+        <h2>📝 Grades</h2>
+        <input type="text" id="gradeStudent" placeholder="Student Name"/>
+        <input type="text" id="gradeSubject" placeholder="Subject"/>
+        <input type="text" id="gradeValue" placeholder="Grade"/>
+        <button onclick="postGrade()">Record Grade</button>
+        <ul id="gradeList"></ul>
+      </div>
+      <div class="card">
+        <h2>🎉 School Activities</h2>
+        <textarea id="activityText" placeholder="Describe activity..."></textarea>
+        <button onclick="postActivity()">Add Activity</button>
+        <ul id="activityList"></ul>
+      </div>
+      <div class="card">
+        <h2>📚 Resources</h2>
+        <input type="text" id="resourceTitle" placeholder="Title"/>
+        <input type="url" id="resourceLink" placeholder="Resource Link"/>
+        <button onclick="addResource()">Add Resource</button>
+        <ul id="resourceList"></ul>
+      </div>
+    </section>
+  </div>
+
+  <footer><p>&copy; 2025 School Portal | All Rights Reserved</p></footer>
+
+  <script>
+    function toggleMenu(){ document.getElementById("navMenu").classList.toggle("show"); }
+    function showSection(id){
+      document.querySelectorAll("#dashboard section").forEach(s=>s.classList.remove("active"));
+      document.getElementById(id).classList.add("active");
+      if(window.innerWidth < 768) toggleMenu();
+    }
+
+    function login(){
+      const user=username.value, pass=password.value;
+      if(user && pass){
+        document.getElementById("login").style.display="none";
+        document.getElementById("dashboard").style.display="block";
+        showSection("portal");
+      } else loginMsg.innerText="❌ Fill details";
+    }
+    function logout(){
+      document.getElementById("dashboard").style.display="none";
+      document.getElementById("login").style.display="block";
+      username.value=""; password.value="";
+    }
+
+    // Example service functions
+    let books=[], sports=[], hostels=[], menu=[], counsel=[];
+    function addBook(){ if(bookTitle.value && bookAuthor.value){ books.push(bookTitle.value+" by "+bookAuthor.value); bookList.innerHTML=books.map(b=>"<li>"+b+"</li>").join(""); } }
+    function addSport(){ if(sportEvent.value){ sports.push(sportEvent.value); sportList.innerHTML=sports.map(s=>"<li>"+s+"</li>").join(""); sportEvent.value=""; } }
+    function addHostel(){ if(hostelName.value && roomNo.value){ hostels.push(hostelName.value+" Room "+roomNo.value); hostelList.innerHTML=hostels.map(h=>"<li>"+h+"</li>").join(""); } }
+    function addMenu(){ if(menuItem.value){ menu.push(menuItem.value); menuList.innerHTML=menu.map(m=>"<li>"+m+"</li>").join(""); menuItem.value=""; } }
+    function addCounsel(){ if(counselText.value){ counsel.push(counselText.value); counselList.innerHTML=counsel.map(c=>"<li>"+c+"</li>").join(""); counselText.value=""; } }
+
+    // Portal
+    let assignments=[], grades=[], activities=[], resources=[];
+    function postAssignment(){ if(assignmentText.value){ assignments.push(assignmentText.value); assignmentList.innerHTML=assignments.map(a=>"<li>"+a+"</li>").join(""); assignmentText.value=""; } }
+    function postGrade(){ if(gradeStudent.value && gradeSubject.value && gradeValue.value){ grades.push(`${gradeStudent.value} - ${gradeSubject.value}: ${gradeValue.value}`); gradeList.innerHTML=grades.map(g=>"<li>"+g+"</li>").join(""); } }
+    function postActivity(){ if(activityText.value){ activities.push(activityText.value); activityList.innerHTML=activities.map(a=>"<li>"+a+"</li>").join(""); activityText.value=""; } }
+    function addResource(){ if(resourceTitle.value && resourceLink.value){ resources.push({title:resourceTitle.value,link:resourceLink.value}); resourceList.innerHTML=resources.map(r=>`<li><a href="${r.link}" target="_blank">${r.title}</a></li>`).join(""); } }
+  </script>
+</body>
+</html>

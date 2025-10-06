@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>School Management System</title>
+  <style>
+    :root { --primary:#2563eb; --secondary:#f9fafb; --dark:#1f2937; --light:#ffffff; }
+    *{margin:0;padding:0;box-sizing:border-box;font-family:Segoe UI, sans-serif;}
+    body{background:var(--secondary);color:var(--dark);line-height:1.6;}
+    header{background:var(--primary);color:white;padding:20px;text-align:center;position:relative;}
+    header h1{font-size:1.8rem;margin-bottom:5px;}
+    .menu-btn{position:absolute;top:20px;left:20px;font-size:24px;cursor:pointer;display:none;color:white;}
+    nav{background:white;padding:12px;display:flex;flex-wrap:wrap;gap:15px;justify-content:center;border-bottom:1px solid #ddd;transition:.3s;}
+    nav a{color:var(--dark);font-weight:500;text-decoration:none;cursor:pointer;padding:6px 10px;border-radius:6px;}
+    nav a:hover{background:var(--primary);color:white;}
+    @media(max-width:768px){nav{display:none;flex-direction:column;}nav.show{display:flex;}.menu-btn{display:block;}}
+    section{display:none;padding:25px;max-width:900px;margin:auto;animation:fadeIn .4s ease-in-out;}
+    section.active{display:block;}
+    @keyframes fadeIn{from{opacity:0;transform:translateY(15px);}to{opacity:1;transform:translateY(0);}}
+    .card{background:white;padding:18px;border-radius:12px;box-shadow:0 3px 8px rgba(0,0,0,0.08);margin-bottom:20px;}
+    input,textarea,button,select{width:100%;margin:8px 0;padding:10px;border-radius:6px;border:1px solid #ccc;font-size:15px;}
+    button{background:var(--primary);color:white;font-weight:bold;border:none;cursor:pointer;transition:.2s;}
+    button:hover{background:#1d4ed8;}
+    ul{margin-top:10px;list-style:none;}
+    ul li{background:#f3f4f6;padding:8px;border-radius:6px;margin:4px 0;}
+    footer{background:var(--dark);color:white;text-align:center;padding:15px;margin-top:30px;}
+  </style>
+</head>
+<body>
+  <header>
+    <span class="menu-btn" onclick="toggleMenu()">☰</span>
+    <h1>🏫 School Management System</h1>
+    <p>Role-based Portal with Admin Control</p>
+  </header>
+
+  <!-- LOGIN -->
+  <section id="login" class="active">
+    <div class="card" style="max-width:400px; margin:auto;">
+      <h2>🔐 Login</h2>
+      <input type="text" id="username" placeholder="Username"/>
+      <input type="password" id="password" placeholder="Password"/>
+      <select id="role">
+        <option value="student">Student</option>
+        <option value="teacher">Teacher</option>
+        <option value="clerk">Clerk</option>
+        <option value="doctor">Doctor</option>
+        <option value="librarian">Librarian</option>
+        <option value="sports">Sports</option>
+        <option value="hostel">Hostel</option>
+        <option value="cafeteria">Cafeteria</option>
+        <option value="counseling">Counseling</option>
+        <option value="admin">Admin</option>
+      </select>
+      <button onclick="login()">Login</button>
+      <p id="loginMsg" style="color:red;font-size:14px;"></p>
+    </div>
+  </section>
+
+  <!-- DASHBOARD -->
+  <div id="dashboard" style="display:none;">
+    <nav id="navMenu"></nav>
+
+    <!-- ADMIN PORTAL -->
+    <section id="adminPortal">
+      <div class="card">
+        <h2>👨‍💼 Admin - Manage Users</h2>
+        <input type="text" id="newUser" placeholder="Username"/>
+        <select id="newRole">
+          <option value="student">Student</option>
+          <option value="teacher">Teacher</option>
+          <option value="clerk">Clerk</option>
+          <option value="doctor">Doctor</option>
+          <option value="librarian">Librarian</option>
+          <option value="sports">Sports</option>
+          <option value="hostel">Hostel</option>
+          <option value="cafeteria">Cafeteria</option>
+          <option value="counseling">Counseling</option>
+        </select>
+        <button onclick="addUser()">Add User</button>
+        <h3>👥 User Accounts</h3>
+        <ul id="userList"></ul>
+      </div>
+      <div class="card">
+        <h2>📊 School Overview</h2>
+        <p>Total Students: <span id="totalStudents">0</span></p>
+        <p>Total Teachers: <span id="totalTeachers">0</span></p>
+        <p>Total Staff: <span id="totalStaff">0</span></p>
+      </div>
+    </section>
+
+    <!-- Role Portals -->
+    <section id="teacherPortal"><div class="card"><h2>📘 Teacher Portal</h2><p>Assignments, grades, activities, resources...</p></div></section>
+    <section id="studentPortal"><div class="card"><h2>👩‍🎓 Student Portal</h2><p>View assignments, grades, resources...</p></div></section>
+    <section id="clerkPortal"><div class="card"><h2>🧾 Clerk Portal</h2><p>Manage fees and admissions.</p></div></section>
+    <section id="doctorPortal"><div class="card"><h2>🏥 Doctor Portal</h2><p>Clinic management.</p></div></section>
+    <section id="librarianPortal"><div class="card"><h2>📚 Library Portal</h2><p>Manage books and records.</p></div></section>
+    <section id="sportsPortal"><div class="card"><h2>⚽ Sports Portal</h2><p>Manage sports events.</p></div></section>
+    <section id="hostelPortal"><div class="card"><h2>🏠 Hostel Portal</h2><p>Hostel allocations.</p></div></section>
+    <section id="cafeteriaPortal"><div class="card"><h2>🍴 Cafeteria Portal</h2><p>Menu management.</p></div></section>
+    <section id="counselingPortal"><div class="card"><h2>🧑‍💼 Counseling Portal</h2><p>Student counseling notes.</p></div></section>
+  </div>
+
+  <footer><p>&copy; 2025 School Portal</p></footer>
+
+  <script>
+    let users=[{name:"Admin",role:"admin"}];
+    let counts={students:0,teachers:0,staff:0};
+
+    function toggleMenu(){document.getElementById("navMenu").classList.toggle("show");}
+    function showSection(id){document.querySelectorAll("#dashboard section").forEach(s=>s.classList.remove("active"));document.getElementById(id).classList.add("active");}
+
+    function login(){
+      let uname=document.getElementById("username").value.trim();
+      let role=document.getElementById("role").value;
+      if(!uname){document.getElementById("loginMsg").innerText="Enter username";return;}
+      document.getElementById("login").style.display="none";
+      document.getElementById("dashboard").style.display="block";
+      buildMenu(role);
+      showSection(role+"Portal");
+    }
+
+    function buildMenu(role){
+      let nav=document.getElementById("navMenu"); nav.innerHTML="";
+      const portals=["admin","teacher","student","clerk","doctor","librarian","sports","hostel","cafeteria","counseling"];
+      portals.forEach(r=>{ if(role==="admin"||role===r){ nav.innerHTML+=`<a onclick="showSection('${r}Portal')">${r.charAt(0).toUpperCase()+r.slice(1)}</a>`; } });
+      nav.innerHTML+=`<a onclick="logout()">🚪 Logout</a>`;
+    }
+
+    function logout(){location.reload();}
+
+    // Admin functions
+    function addUser(){
+      let name=document.getElementById("newUser").value.trim();
+      let role=document.getElementById("newRole").value;
+      if(name&&role){
+        users.push({name,role});
+        if(role==="student") counts.students++;
+        else if(role==="teacher") counts.teachers++;
+        else counts.staff++;
+        document.getElementById("newUser").value="";
+        renderUsers();
+        updateStats();
+      }
+    }
+
+    function renderUsers(){
+      document.getElementById("userList").innerHTML=users.map(u=>`<li>${u.name} (${u.role})</li>`).join("");
+    }
+    function updateStats(){
+      document.getElementById("totalStudents").innerText=counts.students;
+      document.getElementById("totalTeachers").innerText=counts.teachers;
+      document.getElementById("totalStaff").innerText=counts.staff;
+    }
+  </script>
+</body>
+</html>

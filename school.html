@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>School & Clinic System</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin:0; padding:0; }
+    header { background:#004080; color:#fff; padding:15px; text-align:center; }
+    nav { background:#333; padding:10px; display:flex; justify-content:center; gap:20px; }
+    nav a { color:white; text-decoration:none; }
+    nav a:hover { text-decoration:underline; }
+    section { padding:20px; display:none; }
+    section.active { display:block; }
+    footer { background:#222; color:white; text-align:center; padding:10px; margin-top:20px; }
+    input, button, select { margin:5px 0; padding:8px; width:100%; }
+    .form-box { max-width:400px; margin:auto; background:#f9f9f9; padding:20px; border-radius:8px; }
+    table { width:100%; border-collapse:collapse; margin-top:10px; }
+    th, td { border:1px solid #ccc; padding:8px; text-align:left; }
+    th { background:#eee; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>🏫 School & 🏥 Clinic Management System</h1>
+    <p>Integrated portal for students, teachers, doctors, and medicines</p>
+  </header>
+
+  <nav>
+    <a href="#login" onclick="showSection('login')">Login</a>
+    <a href="#students" onclick="showSection('students')">Students</a>
+    <a href="#teachers" onclick="showSection('teachers')">Teachers</a>
+    <a href="#doctors" onclick="showSection('doctors')">Doctors</a>
+    <a href="#medicines" onclick="showSection('medicines')">Medicines</a>
+  </nav>
+
+  <!-- LOGIN SECTION -->
+  <section id="login" class="active">
+    <div class="form-box">
+      <h2>Login</h2>
+      <input type="text" id="username" placeholder="Username"/>
+      <input type="password" id="password" placeholder="Password"/>
+      <button onclick="login()">Login</button>
+      <p id="loginMsg"></p>
+    </div>
+  </section>
+
+  <!-- STUDENTS -->
+  <section id="students">
+    <h2>Manage Students</h2>
+    <div class="form-box">
+      <input type="text" id="studentName" placeholder="Full Name"/>
+      <input type="number" id="studentAge" placeholder="Age"/>
+      <input type="text" id="studentClass" placeholder="Class/Grade"/>
+      <button onclick="addStudent()">Add Student</button>
+    </div>
+    <table id="studentTable">
+      <thead>
+        <tr><th>Name</th><th>Age</th><th>Class</th></tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </section>
+
+  <!-- TEACHERS -->
+  <section id="teachers">
+    <h2>Manage Teachers</h2>
+    <div class="form-box">
+      <input type="text" id="teacherName" placeholder="Name"/>
+      <input type="text" id="teacherSubject" placeholder="Subject"/>
+      <button onclick="addTeacher()">Add Teacher</button>
+    </div>
+    <table id="teacherTable">
+      <thead>
+        <tr><th>Name</th><th>Subject</th></tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </section>
+
+  <!-- DOCTORS -->
+  <section id="doctors">
+    <h2>Manage Doctors</h2>
+    <div class="form-box">
+      <input type="text" id="doctorName" placeholder="Doctor Name"/>
+      <input type="text" id="doctorSpecialty" placeholder="Specialty"/>
+      <button onclick="addDoctor()">Add Doctor</button>
+    </div>
+    <table id="doctorTable">
+      <thead>
+        <tr><th>Name</th><th>Specialty</th></tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </section>
+
+  <!-- MEDICINES -->
+  <section id="medicines">
+    <h2>Manage Medicines</h2>
+    <div class="form-box">
+      <input type="text" id="medicineName" placeholder="Medicine Name"/>
+      <input type="date" id="medicineExpiry"/>
+      <button onclick="addMedicine()">Add Medicine</button>
+    </div>
+    <table id="medicineTable">
+      <thead>
+        <tr><th>Name</th><th>Expiry</th></tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </section>
+
+  <footer>
+    <p>&copy; 2025 School & Clinic System | Built with ❤️</p>
+  </footer>
+
+  <script>
+    // ======= Navigation ========
+    function showSection(id) {
+      document.querySelectorAll("section").forEach(s => s.classList.remove("active"));
+      document.getElementById(id).classList.add("active");
+    }
+
+    // ======= Dummy storage ========
+    let token = null;
+    let students = [], teachers = [], doctors = [], medicines = [];
+
+    // ======= Auth (demo only, should call backend) ========
+    function login() {
+      const user = document.getElementById("username").value;
+      const pass = document.getElementById("password").value;
+      if(user && pass) {
+        token = "fake-jwt";
+        document.getElementById("loginMsg").innerText = "✅ Logged in as " + user;
+      } else {
+        document.getElementById("loginMsg").innerText = "❌ Please enter username & password";
+      }
+    }
+
+    // ======= Students ========
+    function addStudent() {
+      const name = document.getElementById("studentName").value;
+      const age = document.getElementById("studentAge").value;
+      const cls = document.getElementById("studentClass").value;
+      if(name && age && cls) {
+        students.push({name, age, cls});
+        renderStudents();
+      }
+    }
+    function renderStudents() {
+      const tbody = document.querySelector("#studentTable tbody");
+      tbody.innerHTML = "";
+      students.forEach(s => {
+        const tr = `<tr><td>${s.name}</td><td>${s.age}</td><td>${s.cls}</td></tr>`;
+        tbody.innerHTML += tr;
+      });
+    }
+
+    // ======= Teachers ========
+    function addTeacher() {
+      const name = document.getElementById("teacherName").value;
+      const subject = document.getElementById("teacherSubject").value;
+      if(name && subject) {
+        teachers.push({name, subject});
+        renderTeachers();
+      }
+    }
+    function renderTeachers() {
+      const tbody = document.querySelector("#teacherTable tbody");
+      tbody.innerHTML = "";
+      teachers.forEach(t => {
+        const tr = `<tr><td>${t.name}</td><td>${t.subject}</td></tr>`;
+        tbody.innerHTML += tr;
+      });
+    }
+
+    // ======= Doctors ========
+    function addDoctor() {
+      const name = document.getElementById("doctorName").value;
+      const spec = document.getElementById("doctorSpecialty").value;
+      if(name && spec) {
+        doctors.push({name, spec});
+        renderDoctors();
+      }
+    }
+    function renderDoctors() {
+      const tbody = document.querySelector("#doctorTable tbody");
+      tbody.innerHTML = "";
+      doctors.forEach(d => {
+        const tr = `<tr><td>${d.name}</td><td>${d.spec}</td></tr>`;
+        tbody.innerHTML += tr;
+      });
+    }
+
+    // ======= Medicines ========
+    function addMedicine() {
+      const name = document.getElementById("medicineName").value;
+      const expiry = document.getElementById("medicineExpiry").value;
+      if(name && expiry) {
+        medicines.push({name, expiry});
+        renderMedicines();
+      }
+    }
+    function renderMedicines() {
+      const tbody = document.querySelector("#medicineTable tbody");
+      tbody.innerHTML = "";
+      medicines.forEach(m => {
+        const tr = `<tr><td>${m.name}</td><td>${m.expiry}</td></tr>`;
+        tbody.innerHTML += tr;
+      });
+    }
+  </script>
+</body>
+</html>

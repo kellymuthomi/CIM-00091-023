@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>School & Clinic System</title>
+  <style>
+    :root {
+      --primary: #2563eb;
+      --secondary: #f3f4f6;
+      --dark: #1f2937;
+      --light: #ffffff;
+      --error: #dc2626;
+      --success: #16a34a;
+    }
+
+    * { box-sizing: border-box; margin:0; padding:0; font-family: 'Segoe UI', sans-serif; }
+    body { background: var(--secondary); color: var(--dark); }
+
+    header {
+      background: var(--primary);
+      color: var(--light);
+      padding: 20px;
+      text-align: center;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    }
+    header h1 { font-size: 1.8rem; }
+    header p { font-size: 0.9rem; opacity: 0.9; }
+
+    nav {
+      background: var(--light);
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 25px;
+      padding: 12px;
+      border-bottom: 1px solid #ddd;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    nav a {
+      color: var(--dark);
+      text-decoration: none;
+      font-weight: 500;
+      transition: 0.3s;
+      cursor: pointer;
+    }
+    nav a:hover { color: var(--primary); }
+
+    section {
+      display: none;
+      padding: 30px;
+      max-width: 900px;
+      margin: auto;
+    }
+    section.active { display: block; }
+
+    .card {
+      background: var(--light);
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+      margin-bottom: 20px;
+    }
+
+    input, textarea, button, select {
+      padding: 10px;
+      margin: 8px 0;
+      width: 100%;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      font-size: 0.95rem;
+    }
+    button {
+      background: var(--primary);
+      color: var(--light);
+      border: none;
+      cursor: pointer;
+      transition: background 0.3s;
+      font-weight: bold;
+    }
+    button:hover { background: #1d4ed8; }
+
+    .status {
+      font-size: 0.9rem;
+      margin-top: 10px;
+    }
+    .error { color: var(--error); }
+    .success { color: var(--success); }
+
+    footer {
+      background: var(--dark);
+      color: var(--light);
+      text-align: center;
+      padding: 15px;
+      margin-top: 30px;
+    }
+
+    #dashboard { display: none; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>🏫 School Management System</h1>
+    <p>Smart integrated portal for Students, Teachers, Doctors & Medicines</p>
+  </header>
+
+  <!-- LOGIN -->
+  <section id="login" class="active">
+    <div class="card" style="max-width:400px; margin:auto;">
+      <h2>🔐 Login</h2>
+      <input type="text" id="username" placeholder="Username"/>
+      <input type="password" id="password" placeholder="Password"/>
+      <select id="role">
+        <option value="student">Student</option>
+        <option value="teacher">Teacher</option>
+        <option value="doctor">Doctor</option>
+        <option value="admin">Admin</option>
+      </select>
+      <button onclick="login()">Login</button>
+      <p id="loginMsg" class="status"></p>
+    </div>
+  </section>
+
+  <!-- DASHBOARD -->
+  <div id="dashboard">
+    <nav id="menu"></nav>
+    <section id="portal" class="active">
+      <div class="card"><h2>Welcome to the Dashboard</h2><p>Select a module from the menu above.</p></div>
+    </section>
+  </div>
+
+  <footer>
+    <p>&copy; 2025 School & Clinic System | All Rights Reserved</p>
+  </footer>
+
+  <script>
+    const users = [
+      { username: "admin", password: "admin123", role: "admin" },
+      { username: "teacher1", password: "teach123", role: "teacher" },
+      { username: "student1", password: "stud123", role: "student" },
+      { username: "doctor1", password: "doc123", role: "doctor" }
+    ];
+
+    function login(){
+      const u = document.getElementById("username").value.trim();
+      const p = document.getElementById("password").value.trim();
+      const r = document.getElementById("role").value;
+      const msg = document.getElementById("loginMsg");
+
+      const found = users.find(x => x.username === u && x.password === p && x.role === r);
+      if(found){
+        msg.textContent = "✅ Login successful!";
+        msg.className = "status success";
+        setTimeout(()=>{
+          document.getElementById("login").style.display = "none";
+          document.getElementById("dashboard").style.display = "block";
+          buildMenu(found.role);
+        }, 800);
+      } else {
+        msg.textContent = "❌ Invalid username, password, or role";
+        msg.className = "status error";
+      }
+    }
+
+    function buildMenu(role){
+      const menu = document.getElementById("menu");
+      menu.innerHTML = "";
+      const allLinks = {
+        student: ["portal"],
+        teacher: ["portal"],
+        doctor: ["portal"],
+        admin: ["students","teachers","doctors","medicines","portal"]
+      };
+      (allLinks[role]||[]).forEach(id=>{
+        const link = document.createElement("a");
+        link.textContent = id.charAt(0).toUpperCase()+id.slice(1);
+        link.onclick = ()=>showSection(id);
+        menu.appendChild(link);
+      });
+      const logout = document.createElement("a");
+      logout.textContent = "Logout";
+      logout.onclick = ()=>location.reload();
+      menu.appendChild(logout);
+    }
+
+    function showSection(id){
+      document.querySelectorAll("#dashboard section").forEach(s=>s.classList.remove("active"));
+      let sec = document.getElementById(id);
+      if(!sec){
+        sec = document.createElement("section");
+        sec.id = id;
+        sec.innerHTML = `<div class='card'><h2>${id}</h2><p>Module under construction...</p></div>`;
+        document.getElementById("dashboard").appendChild(sec);
+      }
+      sec.classList.add("active");
+    }
+  </script>
+</body>
+</html>

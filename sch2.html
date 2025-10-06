@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>School & Clinic System</title>
+  <style>
+    :root {
+      --primary: #2563eb;
+      --secondary: #f3f4f6;
+      --dark: #1f2937;
+      --light: #ffffff;
+    }
+
+    * { box-sizing: border-box; margin:0; padding:0; font-family: 'Segoe UI', sans-serif; }
+    body { background: var(--secondary); color: var(--dark); }
+
+    header {
+      background: var(--primary);
+      color: var(--light);
+      padding: 20px;
+      text-align: center;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    }
+    header h1 { font-size: 1.8rem; }
+    header p { font-size: 0.9rem; opacity: 0.9; }
+
+    nav {
+      background: var(--light);
+      display: flex;
+      justify-content: center;
+      gap: 25px;
+      padding: 12px;
+      border-bottom: 1px solid #ddd;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    nav a {
+      color: var(--dark);
+      text-decoration: none;
+      font-weight: 500;
+      transition: 0.3s;
+      cursor: pointer;
+    }
+    nav a:hover { color: var(--primary); }
+
+    section {
+      display: none;
+      padding: 30px;
+      max-width: 900px;
+      margin: auto;
+    }
+    section.active { display: block; }
+
+    .card {
+      background: var(--light);
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+      margin-bottom: 20px;
+    }
+
+    input, button, select {
+      padding: 10px;
+      margin: 8px 0;
+      width: 100%;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      font-size: 0.95rem;
+    }
+    button {
+      background: var(--primary);
+      color: var(--light);
+      border: none;
+      cursor: pointer;
+      transition: background 0.3s;
+      font-weight: bold;
+    }
+    button:hover { background: #1d4ed8; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 15px;
+    }
+    th, td {
+      padding: 12px;
+      text-align: left;
+      border-bottom: 1px solid #eee;
+    }
+    th {
+      background: var(--primary);
+      color: var(--light);
+    }
+    tr:hover { background: #f9fafb; }
+
+    footer {
+      background: var(--dark);
+      color: var(--light);
+      text-align: center;
+      padding: 15px;
+      margin-top: 30px;
+    }
+
+    /* Hide dashboard before login */
+    #dashboard { display: none; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>🏫 School & 🏥 Clinic Management System</h1>
+    <p>Smart integrated portal for Students, Teachers, Doctors & Medicines</p>
+  </header>
+
+  <!-- LOGIN -->
+  <section id="login" class="active">
+    <div class="card" style="max-width:400px; margin:auto;">
+      <h2>🔐 Login</h2>
+      <input type="text" id="username" placeholder="Username"/>
+      <input type="password" id="password" placeholder="Password"/>
+      <button onclick="login()">Login</button>
+      <p id="loginMsg"></p>
+    </div>
+  </section>
+
+  <!-- DASHBOARD (hidden until login) -->
+  <div id="dashboard">
+    <nav>
+      <a onclick="showSection('students')">Students</a>
+      <a onclick="showSection('teachers')">Teachers</a>
+      <a onclick="showSection('doctors')">Doctors</a>
+      <a onclick="showSection('medicines')">Medicines</a>
+    </nav>
+
+    <!-- STUDENTS -->
+    <section id="students">
+      <div class="card">
+        <h2>👩‍🎓 Manage Students</h2>
+        <input type="text" id="studentName" placeholder="Full Name"/>
+        <input type="number" id="studentAge" placeholder="Age"/>
+        <input type="text" id="studentClass" placeholder="Class/Grade"/>
+        <button onclick="addStudent()">Add Student</button>
+      </div>
+      <div class="card">
+        <h3>Student List</h3>
+        <table id="studentTable">
+          <thead><tr><th>Name</th><th>Age</th><th>Class</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- TEACHERS -->
+    <section id="teachers">
+      <div class="card">
+        <h2>👨‍🏫 Manage Teachers</h2>
+        <input type="text" id="teacherName" placeholder="Name"/>
+        <input type="text" id="teacherSubject" placeholder="Subject"/>
+        <button onclick="addTeacher()">Add Teacher</button>
+      </div>
+      <div class="card">
+        <h3>Teacher List</h3>
+        <table id="teacherTable">
+          <thead><tr><th>Name</th><th>Subject</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- DOCTORS -->
+    <section id="doctors">
+      <div class="card">
+        <h2>👨‍⚕️ Manage Doctors</h2>
+        <input type="text" id="doctorName" placeholder="Doctor Name"/>
+        <input type="text" id="doctorSpecialty" placeholder="Specialty"/>
+        <button onclick="addDoctor()">Add Doctor</button>
+      </div>
+      <div class="card">
+        <h3>Doctor List</h3>
+        <table id="doctorTable">
+          <thead><tr><th>Name</th><th>Specialty</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- MEDICINES -->
+    <section id="medicines">
+      <div class="card">
+        <h2>💊 Manage Medicines</h2>
+        <input type="text" id="medicineName" placeholder="Medicine Name"/>
+        <input type="date" id="medicineExpiry"/>
+        <button onclick="addMedicine()">Add Medicine</button>
+      </div>
+      <div class="card">
+        <h3>Medicine Stock</h3>
+        <table id="medicineTable">
+          <thead><tr><th>Name</th><th>Expiry</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+  </div>
+
+  <footer>
+    <p>&copy; 2025 School & Clinic System | All Rights Reserved</p>
+  </footer>
+
+  <script>
+    function showSection(id) {
+      document.querySelectorAll("#dashboard section").forEach(s => s.classList.remove("active"));
+      document.getElementById(id).classList.add("active");
+    }
+
+    let students = [], teachers = [], doctors = [], medicines = [];
+
+    function login() {
+      const user = document.getElementById("username").value;
+      const pass = document.getElementById("password").value;
+      if(user && pass){
+        document.getElementById("loginMsg").innerText = "✅ Welcome " + user;
+        document.getElementById("login").style.display = "none"; // hide login
+        document.getElementById("dashboard").style.display = "block"; // show dashboard
+        showSection('students'); // default section
+      } else {
+        document.getElementById("loginMsg").innerText = "❌ Fill in details";
+      }
+    }
+
+    // Students
+    function addStudent() {
+      const name = studentName.value, age = studentAge.value, cls = studentClass.value;
+      if(name && age && cls){ students.push({name, age, cls}); render("studentTable", students, ["name","age","cls"]); }
+    }
+
+    // Teachers
+    function addTeacher() {
+      const name = teacherName.value, subject = teacherSubject.value;
+      if(name && subject){ teachers.push({name, subject}); render("teacherTable", teachers, ["name","subject"]); }
+    }
+
+    // Doctors
+    function addDoctor() {
+      const name = doctorName.value, spec = doctorSpecialty.value;
+      if(name && spec){ doctors.push({name, spec}); render("doctorTable", doctors, ["name","spec"]); }
+    }
+
+    // Medicines
+    function addMedicine() {
+      const name = medicineName.value, expiry = medicineExpiry.value;
+      if(name && expiry){ medicines.push({name, expiry}); render("medicineTable", medicines, ["name","expiry"]); }
+    }
+
+    // Universal render
+    function render(tableId, data, fields){
+      const tbody = document.querySelector(`#${tableId} tbody`);
+      tbody.innerHTML = "";
+      data.forEach(item => {
+        let row = "<tr>";
+        fields.forEach(f => row += `<td>${item[f]}</td>`);
+        row += "</tr>";
+        tbody.innerHTML += row;
+      });
+    }
+  </script>
+</body>
+</html>

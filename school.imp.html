@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>School Management System</title>
+  <style>
+    :root { --primary:#2563eb; --secondary:#f3f4f6; --dark:#1f2937; --light:#ffffff; }
+    *{margin:0;padding:0;box-sizing:border-box;font-family:Segoe UI,sans-serif;}
+    body{background:var(--secondary);color:var(--dark);}
+    header{background:var(--primary);color:white;padding:20px;text-align:center;position:relative;}
+    header h1{font-size:1.8rem;}
+    .menu-btn{position:absolute;top:20px;left:20px;font-size:24px;cursor:pointer;display:none;color:white;}
+    nav{background:white;padding:12px;display:flex;flex-wrap:wrap;gap:15px;justify-content:center;border-bottom:1px solid #ddd;}
+    nav a{color:var(--dark);font-weight:500;text-decoration:none;cursor:pointer;}
+    nav a:hover{color:var(--primary);}
+    @media(max-width:768px){nav{display:none;flex-direction:column;}nav.show{display:flex;}.menu-btn{display:block;}}
+    section{display:none;padding:25px;max-width:900px;margin:auto;}
+    section.active{display:block;}
+    .card{background:white;padding:18px;border-radius:12px;box-shadow:0 3px 8px rgba(0,0,0,0.05);margin-bottom:20px;}
+    input,textarea,button,select{width:100%;margin:8px 0;padding:10px;border-radius:6px;border:1px solid #ccc;}
+    button{background:var(--primary);color:white;font-weight:bold;border:none;cursor:pointer;}
+    button:hover{background:#1d4ed8;}
+    ul{margin-top:10px;}
+    footer{background:var(--dark);color:white;text-align:center;padding:15px;margin-top:20px;}
+    .assignment{border-bottom:1px solid #ddd;padding:10px 0;}
+  </style>
+</head>
+<body>
+  <header>
+    <span class="menu-btn" onclick="toggleMenu()">☰</span>
+    <h1>🏫 School Management System</h1>
+    <p>Role-based Portal with Admin Control</p>
+  </header>
+
+  <!-- LOGIN -->
+  <section id="login" class="active">
+    <div class="card" style="max-width:400px; margin:auto;">
+      <h2>🔐 Login</h2>
+      <input type="text" id="username" placeholder="Username"/>
+      <input type="password" id="password" placeholder="Password"/>
+      <select id="role">
+        <option value="student">Student</option>
+        <option value="teacher">Teacher</option>
+        <option value="clerk">Clerk</option>
+        <option value="doctor">Doctor</option>
+        <option value="librarian">Librarian</option>
+        <option value="sports">Sports</option>
+        <option value="hostel">Hostel</option>
+        <option value="cafeteria">Cafeteria</option>
+        <option value="counseling">Counseling</option>
+        <option value="admin">Admin</option>
+      </select>
+      <button onclick="login()">Login</button>
+      <p id="loginMsg"></p>
+    </div>
+  </section>
+
+  <!-- DASHBOARD -->
+  <div id="dashboard" style="display:none;">
+    <nav id="navMenu"></nav>
+
+    <!-- TEACHER PORTAL -->
+    <section id="teacherPortal">
+      <div class="card">
+        <h2>📘 Teacher Portal</h2>
+        <h3>Post Assignment</h3>
+        <input type="text" id="assignmentTitle" placeholder="Assignment Title"/>
+        <textarea id="assignmentDesc" placeholder="Assignment Description"></textarea>
+        <button onclick="postAssignment()">Post Assignment</button>
+      </div>
+      <div class="card">
+        <h3>Assignments</h3>
+        <ul id="teacherAssignments"></ul>
+      </div>
+      <div class="card">
+        <h3>Student Submissions</h3>
+        <ul id="submissionList"></ul>
+      </div>
+      <div class="card">
+        <h3>Grade Student</h3>
+        <input type="text" id="studentName" placeholder="Student Name"/>
+        <input type="text" id="grade" placeholder="Grade (A,B,C...)"/>
+        <button onclick="postGrade()">Submit Grade</button>
+      </div>
+      <div class="card">
+        <h3>All Grades</h3>
+        <ul id="gradeList"></ul>
+      </div>
+    </section>
+
+    <!-- STUDENT PORTAL -->
+    <section id="studentPortal">
+      <div class="card">
+        <h2>👩‍🎓 Student Portal</h2>
+        <h3>My Assignments</h3>
+        <ul id="studentAssignments"></ul>
+      </div>
+      <div class="card">
+        <h3>Submit Assignment</h3>
+        <select id="selectAssignment"></select>
+        <textarea id="submissionText" placeholder="Write your answer here..."></textarea>
+        <button onclick="submitAssignment()">Submit</button>
+      </div>
+      <div class="card">
+        <h3>My Grades</h3>
+        <ul id="studentGrades"></ul>
+      </div>
+    </section>
+
+    <!-- OTHER PORTALS -->
+    <section id="clerkPortal"><div class="card"><h2>🧾 Clerk Portal</h2><p>Manage fees and admissions</p></div></section>
+    <section id="doctorPortal"><div class="card"><h2>🏥 Doctor Portal</h2><p>Clinic management</p></div></section>
+    <section id="librarianPortal"><div class="card"><h2>📚 Library Portal</h2><p>Manage books</p></div></section>
+    <section id="sportsPortal"><div class="card"><h2>⚽ Sports Portal</h2><p>Manage sports events</p></div></section>
+    <section id="hostelPortal"><div class="card"><h2>🏠 Hostel Portal</h2><p>Hostel allocations</p></div></section>
+    <section id="cafeteriaPortal"><div class="card"><h2>🍴 Cafeteria Portal</h2><p>Menu management</p></div></section>
+    <section id="counselingPortal"><div class="card"><h2>🧑‍💼 Counseling Portal</h2><p>Student counseling notes</p></div></section>
+  </div>
+
+  <footer><p>&copy; 2025 School Portal</p></footer>
+
+  <script>
+    let users=JSON.parse(localStorage.getItem("users"))||[{name:"Admin",role:"admin"}];
+    let counts=JSON.parse(localStorage.getItem("counts"))||{students:0,teachers:0,staff:0};
+    let assignments=JSON.parse(localStorage.getItem("assignments"))||[];
+    let grades=JSON.parse(localStorage.getItem("grades"))||[];
+    let submissions=JSON.parse(localStorage.getItem("submissions"))||[];
+    let currentUser="";
+    let currentRole="";
+
+    function toggleMenu(){document.getElementById("navMenu").classList.toggle("show");}
+    function showSection(id){document.querySelectorAll("#dashboard section").forEach(s=>s.classList.remove("active"));document.getElementById(id).classList.add("active");}
+
+    function login(){
+      currentUser=document.getElementById("username").value||"Guest";
+      currentRole=document.getElementById("role").value;
+      document.getElementById("login").style.display="none";
+      document.getElementById("dashboard").style.display="block";
+      buildMenu(currentRole);
+      showSection(currentRole+"Portal");
+      renderAssignments();
+      renderGrades();
+      renderSubmissions();
+    }
+
+    function buildMenu(role){
+      let nav=document.getElementById("navMenu"); nav.innerHTML="";
+      const portals=["teacher","student","clerk","doctor","librarian","sports","hostel","cafeteria","counseling"];
+      portals.forEach(r=>{ if(role==="admin"||role===r){ nav.innerHTML+=`<a onclick=\"showSection('${r}Portal')\">${r.charAt(0).toUpperCase()+r.slice(1)}</a>`; } });
+      nav.innerHTML+=`<a onclick=\"logout()\">🚪 Logout</a>`;
+    }
+
+    function logout(){location.reload();}
+
+    // Assignments
+    function postAssignment(){
+      let title=document.getElementById("assignmentTitle").value;
+      let desc=document.getElementById("assignmentDesc").value;
+      if(title&&desc){
+        assignments.push({id:Date.now(),title,desc,teacher:currentUser});
+        localStorage.setItem("assignments",JSON.stringify(assignments));
+        renderAssignments();
+      }
+    }
+    function renderAssignments(){
+      document.getElementById("teacherAssignments").innerHTML=assignments.map(a=>`<li class='assignment'><b>${a.title}</b> - ${a.desc} (by ${a.teacher})</li>`).join("");
+      document.getElementById("studentAssignments").innerHTML=assignments.map(a=>`<li class='assignment'><b>${a.title}</b> - ${a.desc} (by ${a.teacher})</li>`).join("");
+      let select=document.getElementById("selectAssignment");
+      select.innerHTML=assignments.map(a=>`<option value='${a.id}'>${a.title}</option>`).join("");
+    }
+
+    // Submissions
+    function submitAssignment(){
+      let assignmentId=document.getElementById("selectAssignment").value;
+      let text=document.getElementById("submissionText").value;
+      if(assignmentId&&text){
+        submissions.push({assignmentId,student:currentUser,text});
+        localStorage.setItem("submissions",JSON.stringify(submissions));
+        renderSubmissions();
+      }
+    }
+    function renderSubmissions(){
+      document.getElementById("submissionList").innerHTML=submissions.map(s=>{
+        let a=assignments.find(a=>a.id==s.assignmentId);
+        return `<li><b>${a?a.title:"Assignment"}</b> - ${s.text} (by ${s.student})</li>`;
+      }).join("");
+    }
+
+    // Grades
+    function postGrade(){
+      let student=document.getElementById("studentName").value;
+      let grade=document.getElementById("grade").value;
+      if(student&&grade){
+        grades.push({student,grade,teacher:currentUser});
+        localStorage.setItem("grades",JSON.stringify(grades));
+        renderGrades();
+      }
+    }
+    function renderGrades(){
+      document.getElementById("gradeList").innerHTML=grades.map(g=>`<li>${g.student} - Grade: ${g.grade} (by ${g.teacher})</li>`).join("");
+      document.getElementById("studentGrades").innerHTML=grades.filter(g=>g.student===currentUser).map(g=>`<li>${g.student} - Grade: ${g.grade} (by ${g.teacher})</li>`).join("");
+    }
+  </script>
+</body>
+</html>
