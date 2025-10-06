@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Medical Management System</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #f5f5f5; margin: 0; padding: 0; }
+    .login-container, .dashboard { max-width: 600px; margin: 40px auto; background: #fff; padding: 20px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+    h2 { text-align: center;
+    COLOR: hsl(133, 92%, 52%); }
+    input, button { width: 100%; padding: 10px; margin: 5px 0; border-radius: 5px; border: 1px solid #ccc; }
+    button { background: #007bff; color: #fff; border: none; cursor: pointer; }
+    button:hover { background: #0056b3; }
+    nav { display: flex; gap: 10px; margin: 10px 0; }
+    nav button { flex: 1; }
+    .section { display: none; }
+    .section.active { display: block; }
+    .item { display: flex; justify-content: space-between; background: #f9f9f9; margin: 5px 0; padding: 8px; border-radius: 5px; }
+    .item span { flex: 1; }
+    .item button { margin-left: 5px; padding: 5px 10px; }
+    .edit { background: #28a745; color: white; }
+    .delete { background: #dc3545; color: white; }
+  </style>
+</head>
+<body>
+
+  <!-- Login Page -->
+  <div class="login-container" id="login-container">
+    <h2>WELCOME TO OUR PAGE</h2>
+    <input type="text" id="username" placeholder="Username">
+    <input type="password" id="password" placeholder="Password">
+    <button onclick="login()">Login</button>
+  </div>
+
+  <!-- Dashboard -->
+  <div class="dashboard" id="dashboard" style="display:none;">
+    <h2>Admin Dashboard</h2>
+    <nav>
+      <button onclick="showSection('patients')">Patients</button>
+      <button onclick="showSection('doctors')">Doctors</button>
+      <button onclick="showSection('medicines')">Medicines</button>
+    </nav>
+
+    <!-- Patients Section -->
+    <div id="patients" class="section">
+      <h3>Manage Patients</h3>
+      <form id="patient-form">
+        <input type="text" id="patient-name" placeholder="Full Name" required>
+        <input type="number" id="patient-age" placeholder="Age" required>
+        <input type="text" id="patient-gender" placeholder="Gender" required>
+        <button type="submit">Add Patient</button>
+      </form>
+      <div id="patient-list"></div>
+    </div>
+
+    <!-- Doctors Section -->
+    <div id="doctors" class="section">
+      <h3>Manage Doctors</h3>
+      <form id="doctor-form">
+        <input type="text" id="doctor-name" placeholder="Doctor Name" required>
+        <input type="text" id="doctor-specialty" placeholder="Specialty" required>
+        <button type="submit">Add Doctor</button>
+      </form>
+      <div id="doctor-list"></div>
+    </div>
+
+    <!-- Medicines Section -->
+    <div id="medicines" class="section">
+      <h3>Manage Medicines</h3>
+      <form id="medicine-form">
+        <input type="text" id="medicine-name" placeholder="Medicine Name" required>
+        <input type="text" id="medicine-dosage" placeholder="Dosage" required>
+        <button type="submit">Add Medicine</button>
+      </form>
+      <div id="medicine-list"></div>
+    </div>
+  </div>
+
+  <script>
+    // Local storage setup
+    let patients = JSON.parse(localStorage.getItem('patients')) || [];
+    let doctors = JSON.parse(localStorage.getItem('doctors')) || [];
+    let medicines = JSON.parse(localStorage.getItem('medicines')) || [];
+
+    function login() {
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
+      if(username === 'kelly' && password === 'admin123') {
+        document.getElementById('login-container').style.display = 'none';
+        document.getElementById('dashboard').style.display = 'block';
+        showSection('patients');
+        renderPatients();
+        renderDoctors();
+        renderMedicines();
+      } else {
+        alert('Invalid credentials!');
+      }
+    }
+
+    function showSection(id) {
+      document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+    }
+
+    // Render functions
+    function renderPatients() {
+      const list = document.getElementById('patient-list');
+      list.innerHTML = '';
+      patients.forEach(p => {
+        list.innerHTML += `<div class='item'><span>${p.name} (${p.age}, ${p.gender})</span>
+          <button class='edit' onclick='editPatient(${p.id})'>Edit</button>
+          <button class='delete' onclick='deletePatient(${p.id})'>Delete</button></div>`;
+      });
+      localStorage.setItem('patients', JSON.stringify(patients));
+    }
+
+    function renderDoctors() {
+      const list = document.getElementById('doctor-list');
+      list.innerHTML = '';
+      doctors.forEach(d => {
+        list.innerHTML += `<div class='item'><span>${d.name} - ${d.specialty}</span>
+          <button class='edit' onclick='editDoctor(${d.id})'>Edit</button>
+          <button class='delete' onclick='deleteDoctor(${d.id})'>Delete</button></div>`;
+      });
+      localStorage.setItem('doctors', JSON.stringify(doctors));
+    }
+
+    function renderMedicines() {
+      const list = document.getElementById('medicine-list');
+      list.innerHTML = '';
+      medicines.forEach(m => {
+        list.innerHTML += `<div class='item'><span>${m.name} (${m.dosage})</span>
+          <button class='edit' onclick='editMedicine(${m.id})'>Edit</button>
+          <button class='delete' onclick='deleteMedicine(${m.id})'>Delete</button></div>`;
+      });
+      localStorage.setItem('medicines', JSON.stringify(medicines));
+    }
+
+    // Add handlers
+    document.getElementById('patient-form').addEventListener('submit', e => {
+      e.preventDefault();
+      patients.push({ id: Date.now(), name: patient-name.value, age: patient-age.value, gender: patient-gender.value });
+      renderPatients();
+      e.target.reset();
+    });
+
+    document.getElementById('doctor-form').addEventListener('submit', e => {
+      e.preventDefault();
+      doctors.push({ id: Date.now(), name: doctor-name.value, specialty: doctor-specialty.value });
+      renderDoctors();
+      e.target.reset();
+    });
+
+    document.getElementById('medicine-form').addEventListener('submit', e => {
+      e.preventDefault();
+      medicines.push({ id: Date.now(), name: medicine-name.value, dosage: medicine-dosage.value });
+      renderMedicines();
+      e.target.reset();
+    });
+
+    // Edit/Delete Patients
+    function editPatient(id) {
+      let p = patients.find(x => x.id === id);
+      let newName = prompt('Edit Name', p.name);
+      let newAge = prompt('Edit Age', p.age);
+      let newGender = prompt('Edit Gender', p.gender);
+      if(newName) p.name = newName;
+      if(newAge) p.age = newAge;
+      if(newGender) p.gender = newGender;
+      renderPatients();
+    }
+    function deletePatient(id) { patients = patients.filter(p => p.id !== id); renderPatients(); }
+
+    // Edit/Delete Doctors
+    function editDoctor(id) {
+      let d = doctors.find(x => x.id === id);
+      let newName = prompt('Edit Name', d.name);
+      let newSpecialty = prompt('Edit Specialty', d.specialty);
+      if(newName) d.name = newName;
+      if(newSpecialty) d.specialty = newSpecialty;
+      renderDoctors();
+    }
+    function deleteDoctor(id) { doctors = doctors.filter(d => d.id !== id); renderDoctors(); }
+
+    // Edit/Delete Medicines
+    function editMedicine(id) {
+      let m = medicines.find(x => x.id === id);
+      let newName = prompt('Edit Name', m.name);
+      let newDosage = prompt('Edit Dosage', m.dosage);
+      if(newName) m.name = newName;
+      if(newDosage) m.dosage = newDosage;
+      renderMedicines();
+    }
+    function deleteMedicine(id) { medicines = medicines.filter(m => m.id !== id); renderMedicines(); }
+
+  </script>
+</body>
+</html>
