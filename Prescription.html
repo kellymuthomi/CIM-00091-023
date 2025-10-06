@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Add Prescription</title>
+    <style>
+        body {
+            text-align: center;
+            font-family: Arial, sans-serif;
+            margin: 40px;
+        }
+
+        form {
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 50px;
+            border: 1px solid hsl(0, 91%, 54%);
+            border-radius: 8px;
+            background-color: hsl(130, 90%, 50%);
+        }
+
+        label {
+            font-weight: bold;
+        }
+
+        input, button {
+            width: 100%;
+            padding: 8px;
+            margin-top: 4px;
+            margin-bottom: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        button {
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        a {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            text-decoration: none;
+            color: #007BFF;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <h1>💊 Add a New Prescription</h1>
+
+    <form action="submit_prescription.php" method="POST">
+        <label>Patient Name:</label><br>
+        <input type="text" name="name" required><br><br>
+        
+        <label>Email:</label><br>
+        <input type="email" name="email" required><br><br>
+        
+        <label>Medicine Name:</label><br>
+        <input type="text" name="medicine_name" required><br><br>
+        
+        <label>Dosage:</label><br>
+        <input type="text" name="dosage" required><br><br>
+        
+        <label>Time to Take (24-hour format HH:MM):</label><br>
+        <input type="time" name="time" required><br><br>
+    
+        <button type="submit">Submit</button>
+        <button type="cancel">Cancel</button>
+    </form>
+
+    <br>
+    <a href="/">← Back to Home</a>
+</body>
+</html>

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Medical Inventory</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 30px;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        table {
+            width: 80%;
+            margin: 0 auto;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: center;
+            border: 1px solid #ccc;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        a {
+            display: block;
+            text-align: center;
+            margin-top: 30px;
+            text-decoration: none;
+            color: #007BFF;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <h1>📦 Medical Store Inventory</h1>
+
+    <table border="1">
+        <tr>
+            <th>Item Name</th>
+            <th>Quantity</th>
+            <th>Expiry Date</th>
+        </tr>
+        {% for item in items %}
+        <tr>
+            <td>{{ item['item_name'] }}</td>
+            <td>{{ item['quantity'] }}</td>
+            <td>{{ item['expiry_date'] }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <br>
+    <a href="/">← Back to Home</a>
+</body>
+</html>
